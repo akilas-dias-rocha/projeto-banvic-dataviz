@@ -1,0 +1,118 @@
+table dim_contas
+	lineageTag: 48045696-7247-4d1e-9322-c667e1ca0bc5
+
+	column num_conta
+		dataType: string
+		lineageTag: 019aaa27-5a7b-4974-9e3e-9a305dcf597b
+		summarizeBy: none
+		sourceColumn: num_conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_cliente
+		dataType: string
+		lineageTag: a00f995a-a9d1-4539-aeed-b9d414b18467
+		summarizeBy: none
+		sourceColumn: cod_cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_agencia
+		dataType: string
+		lineageTag: 2fb706b4-c20d-4c9c-a3b6-98d5b391c3eb
+		summarizeBy: none
+		sourceColumn: cod_agencia
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_colaborador
+		dataType: string
+		lineageTag: 2f009074-3b82-4fc8-91b7-408ca1f9ed91
+		summarizeBy: none
+		sourceColumn: cod_colaborador
+
+		annotation SummarizationSetBy = Automatic
+
+	column tipo_conta
+		dataType: string
+		lineageTag: e3c88bb1-61ca-4188-ba32-e361b4f10291
+		summarizeBy: none
+		sourceColumn: tipo_conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_abertura
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 5ac8b198-24c5-4c95-8bf8-90e4cbbc154f
+		summarizeBy: none
+		sourceColumn: data_abertura
+
+		variation Variation
+			isDefault
+			relationship: 68541fe4-b9bc-4cd3-8bf9-38f97fe5ac27
+			defaultHierarchy: LocalDateTable_8a9388f8-1bfa-4e6a-88c3-bc968729476c.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column saldo_total
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 84bd313e-6608-4e16-b007-68572f993a98
+		summarizeBy: sum
+		sourceColumn: saldo_total
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column saldo_disponivel
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 40fd76fe-b164-4dae-b109-e3131807bb85
+		summarizeBy: sum
+		sourceColumn: saldo_disponivel
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column data_ultimo_lancamento
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f8af39c4-9a9b-4495-80e8-a8c82144f9f9
+		summarizeBy: none
+		sourceColumn: data_ultimo_lancamento
+
+		variation Variation
+			isDefault
+			relationship: 23ee30b9-5a09-4fe5-a0e1-c556f48746d0
+			defaultHierarchy: LocalDateTable_37588d82-2f49-4509-9ef7-bdc29eb557ff.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition dim_contas = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\contas.csv"),[Delimiter=",", Columns=9, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Texto Extraído Antes do Delimitador" = Table.TransformColumns(#"Cabeçalhos Promovidos", {{"data_abertura", each Text.BeforeDelimiter(_, " "), type text}}),
+				    #"Texto Extraído Antes do Delimitador1" = Table.TransformColumns(#"Texto Extraído Antes do Delimitador", {{"data_ultimo_lancamento", each Text.BeforeDelimiter(_, " "), type text}}),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Texto Extraído Antes do Delimitador1",".",",",Replacer.ReplaceText,{"saldo_total"}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Valor Substituído",{{"saldo_total", Currency.Type}}),
+				    #"Valor Substituído1" = Table.ReplaceValue(#"Tipo Alterado",".",",",Replacer.ReplaceText,{"saldo_disponivel"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Valor Substituído1",{{"saldo_disponivel", Currency.Type}, {"data_ultimo_lancamento", type date}, {"data_abertura", type date}})
+				in
+				    #"Tipo Alterado1"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

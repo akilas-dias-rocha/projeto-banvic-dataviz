@@ -1,0 +1,92 @@
+table dim_colaboradores
+	lineageTag: 9621b011-4fc7-4bc0-ac67-480f9352dfc8
+
+	column cod_colaborador
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f70667a-ff9e-42e8-9db9-240b77e14c0b
+		summarizeBy: none
+		sourceColumn: cod_colaborador
+
+		annotation SummarizationSetBy = Automatic
+
+	column primeiro_nome
+		dataType: string
+		lineageTag: 9e0316c8-5014-40b5-bddb-55ecbc91220a
+		summarizeBy: none
+		sourceColumn: primeiro_nome
+
+		annotation SummarizationSetBy = Automatic
+
+	column ultimo_nome
+		dataType: string
+		lineageTag: 390dff9f-48b1-4054-9e12-3db66afa8d24
+		summarizeBy: none
+		sourceColumn: ultimo_nome
+
+		annotation SummarizationSetBy = Automatic
+
+	column email
+		dataType: string
+		lineageTag: 0311d22f-9dc7-4a00-b0c0-c9cf9779d456
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = Automatic
+
+	column cpf
+		dataType: string
+		lineageTag: 04ae4a34-4442-470c-b2f1-ba940116c06b
+		summarizeBy: none
+		sourceColumn: cpf
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_nascimento
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: de0ef1b4-daf5-4064-a99f-6a61e2e75d65
+		summarizeBy: none
+		sourceColumn: data_nascimento
+
+		variation Variation
+			isDefault
+			relationship: 627c65a3-ab12-4adf-ad64-41a5bb361ba3
+			defaultHierarchy: LocalDateTable_6ee0788e-ad16-4d17-92a4-9e6511fa168f.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column endereco
+		dataType: string
+		lineageTag: 780252d9-74c9-4d1e-bc2f-bf3c16b3204a
+		summarizeBy: none
+		sourceColumn: endereco
+
+		annotation SummarizationSetBy = Automatic
+
+	column cep
+		dataType: string
+		lineageTag: f6983d8a-0c96-4fba-a416-efc71bf2cc95
+		summarizeBy: none
+		sourceColumn: cep
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_colaboradores = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\colaboradores.csv"),[Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"cod_colaborador", Int64.Type}, {"primeiro_nome", type text}, {"ultimo_nome", type text}, {"email", type text}, {"cpf", type text}, {"data_nascimento", type date}, {"endereco", type text}, {"cep", type text}})
+				in
+				    #"Tipo Alterado"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

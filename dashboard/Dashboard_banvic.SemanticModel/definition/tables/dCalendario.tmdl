@@ -1,0 +1,70 @@
+table dCalendario
+	lineageTag: ad03e2ba-a544-4e95-9285-3f36ac081b9c
+
+	column Date
+		formatString: Short Date
+		lineageTag: 39dc5e81-3b4e-4fb2-87f1-f3d480475336
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		variation Variation
+			isDefault
+			relationship: ca4657c8-d7f0-4de5-9afc-894a169ade06
+			defaultHierarchy: LocalDateTable_eb86aca4-5a91-45ae-b8bf-30969cb6f3a1.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano = YEAR([Date])
+		formatString: 0
+		lineageTag: 2a614b48-7069-4eaa-b89b-be3237ffd3ba
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mês = MONTH([Date])
+		formatString: 0
+		lineageTag: 84a92bbf-e204-4020-a534-fc907162f41d
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dia = DAY([Date])
+		formatString: 0
+		lineageTag: b8725b00-a77b-4ed1-aa40-f3205fe41b64
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nome_mês = FORMAT([Date], "MMM")
+		lineageTag: 16d8bc29-8796-4e50-8b8a-d802d3ba9674
+		summarizeBy: none
+		sortByColumn: Mês
+
+		annotation SummarizationSetBy = Automatic
+
+	column Nome_dia = FORMAT([Date], "DDD")
+		lineageTag: 68b6b542-4eec-4d6d-8dc9-ea97447acb18
+		summarizeBy: none
+		sortByColumn: Num_dia_semana
+
+		annotation SummarizationSetBy = Automatic
+
+	column Num_dia_semana = WEEKDAY ( [Date])
+		formatString: 0
+		lineageTag: 124fb792-3fdc-45af-88c1-052a2797119f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dCalendario = calculated
+		mode: import
+		source =
+				
+				CALENDAR (
+				    MIN(MIN(fat_propostas_credito[data_entrada_proposta]), MIN(fat_transacoes[data_transacao])),
+				    MAX(MAX(fat_propostas_credito[data_entrada_proposta]), MAX(fat_transacoes[data_transacao]))
+				)
+
+	annotation PBI_Id = a30ccada98374c2692f98e93c3a39154
+

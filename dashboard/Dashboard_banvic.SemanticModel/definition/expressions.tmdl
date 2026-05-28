@@ -1,0 +1,15 @@
+expression 'Erros em fat_transacoes (2)' =
+		let
+		Fonte = fat_transacoes,
+		    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"valor_transacao", type text}}),
+		    #"Valor Substituído" = Table.ReplaceValue(#"Tipo Alterado",".",",",Replacer.ReplaceText,{"valor_transacao"}),
+		    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Valor Substituído",{{"valor_transacao", Currency.Type}})
+		in
+		    #"Tipo Alterado1"
+	lineageTag: e3a4034b-3184-46f9-9292-c59c6b8f17e8
+	queryGroup: 'Erros na Consulta - 13/09/2025 10:48:30'
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

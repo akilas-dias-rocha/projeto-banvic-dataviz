@@ -1,0 +1,76 @@
+relationship 1ab05018-3578-4ac1-81c0-17a14e16d857
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_agencias.data_abertura
+	toColumn: LocalDateTable_900e26e8-ad71-4523-b20a-e0c3121aa593.Date
+
+relationship 4a218890-6ac8-4c50-b7cf-b07f7b281589
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_clientes.data_inclusao
+	toColumn: LocalDateTable_78f9ac33-fa63-4240-850c-31cee55d4117.Date
+
+relationship 5b19a244-0508-409a-813e-55dc459b1a59
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_clientes.data_nascimento
+	toColumn: LocalDateTable_cdb87783-4e4e-4beb-ad19-7242dd17be28.Date
+
+relationship 627c65a3-ab12-4adf-ad64-41a5bb361ba3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_colaboradores.data_nascimento
+	toColumn: LocalDateTable_6ee0788e-ad16-4d17-92a4-9e6511fa168f.Date
+
+relationship AutoDetected_fc666fa1-6119-4ce3-9501-88bb39a3e963
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dim_colaboradores.cod_colaborador
+	toColumn: colaborador_agencia.cod_colaborador
+
+relationship 68541fe4-b9bc-4cd3-8bf9-38f97fe5ac27
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_contas.data_abertura
+	toColumn: LocalDateTable_8a9388f8-1bfa-4e6a-88c3-bc968729476c.Date
+
+relationship 23ee30b9-5a09-4fe5-a0e1-c556f48746d0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dim_contas.data_ultimo_lancamento
+	toColumn: LocalDateTable_37588d82-2f49-4509-9ef7-bdc29eb557ff.Date
+
+relationship AutoDetected_421ebbcd-d45c-4fa7-8e6b-041bb72dc37e
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: dim_clientes.cod_cliente
+	toColumn: dim_contas.cod_cliente
+
+relationship AutoDetected_16c8d558-ba15-48a3-98b3-a6758d7f1364
+	fromColumn: fat_propostas_credito.cod_cliente
+	toColumn: dim_contas.cod_cliente
+
+relationship 01065ed9-b426-93bf-55f5-0011cb061f77
+	isActive: false
+	fromColumn: fat_propostas_credito.cod_cliente
+	toColumn: dim_clientes.cod_cliente
+
+relationship 0aa3a025-1444-1a75-2601-3552eeeb6f19
+	fromColumn: fat_propostas_credito.cod_colaborador
+	toColumn: dim_colaboradores.cod_colaborador
+
+relationship 4d024130-6b46-aaef-e834-787052b41aac
+	fromColumn: fat_transacoes.num_conta
+	toColumn: dim_contas.num_conta
+
+relationship ca4657c8-d7f0-4de5-9afc-894a169ade06
+	joinOnDateBehavior: datePartOnly
+	fromColumn: dCalendario.Date
+	toColumn: LocalDateTable_eb86aca4-5a91-45ae-b8bf-30969cb6f3a1.Date
+
+relationship 744c0a46-4cdf-356f-6ecd-0aea0763a6df
+	fromColumn: fat_propostas_credito.data_entrada_proposta
+	toColumn: dCalendario.Date
+
+relationship 2514ae24-979f-f26b-8a9f-a8398ffb14ea
+	fromColumn: fat_transacoes.data_transacao
+	toColumn: dCalendario.Date
+
+relationship 6dd05686-a4ca-0b62-3f04-1063a99c86f4
+	fromColumn: dim_contas.cod_agencia
+	toColumn: dim_agencias.cod_gência
+

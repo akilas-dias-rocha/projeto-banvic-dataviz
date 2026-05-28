@@ -1,0 +1,139 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 7.2463768115942031
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 340.75389670270687,
+            "y": 446.86430031053692
+          },
+          "nodeIndex": "colaborador_agencia",
+          "nodeLineageTag": "c0418979-96ec-472d-bec1-30ca80c77ff7",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 95.547070447749093,
+            "y": 0
+          },
+          "nodeIndex": "dim_agencias",
+          "nodeLineageTag": "5fb81fb6-cf12-449b-81fe-228a8774b288",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 356.3434510262511,
+            "y": 1.44927536231884
+          },
+          "nodeIndex": "dim_clientes",
+          "nodeLineageTag": "839cdeca-d1c7-4b49-9bee-b3f4622f6c16",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 629.06853660876834,
+            "y": 435.56774650706626
+          },
+          "nodeIndex": "fat_propostas_credito",
+          "nodeLineageTag": "2873fa5e-42e9-4d82-889a-60728944a674",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 906.03933747412,
+            "y": 437.18426501035196
+          },
+          "nodeIndex": "fat_transacoes",
+          "nodeLineageTag": "97012c1c-08b7-4da2-abc0-edf23752cb37",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 626.34035603190887,
+            "y": 0
+          },
+          "nodeIndex": "dim_colaboradores",
+          "nodeLineageTag": "9621b011-4fc7-4bc0-ac67-480f9352dfc8",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 889.5072949697834,
+            "y": 0
+          },
+          "nodeIndex": "dim_contas",
+          "nodeLineageTag": "48045696-7247-4d1e-9322-c667e1ca0bc5",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1145.2169047075304,
+            "y": 9.8128587607794771
+          },
+          "nodeIndex": "dCalendario",
+          "nodeLineageTag": "ad03e2ba-a544-4e95-9285-3f36ac081b9c",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1217.727805274274,
+            "y": 376.47952542744616
+          },
+          "nodeIndex": "Medidas",
+          "nodeLineageTag": "a21a5021-014c-48dd-8261-10f539a45978",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 69,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

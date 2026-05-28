@@ -1,0 +1,145 @@
+table fat_propostas_credito
+	lineageTag: 2873fa5e-42e9-4d82-889a-60728944a674
+
+	column cod_proposta
+		dataType: string
+		lineageTag: 9123f833-e45f-4527-a3cc-dcb7214760af
+		summarizeBy: none
+		sourceColumn: cod_proposta
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_cliente
+		dataType: string
+		lineageTag: 0cd3e2e2-5e5e-4d1a-b273-571f4296400d
+		summarizeBy: none
+		sourceColumn: cod_cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_colaborador
+		dataType: string
+		lineageTag: 6dc59a18-e364-4f9e-92cb-ae6480082b54
+		summarizeBy: none
+		sourceColumn: cod_colaborador
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_entrada_proposta
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 12d760e1-be7e-407c-9edf-153834023580
+		summarizeBy: none
+		sourceColumn: data_entrada_proposta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column taxa_juros_mensal
+		dataType: double
+		lineageTag: ae6dfda5-7ba6-46a6-b418-e9fc5a0f6d7d
+		summarizeBy: sum
+		sourceColumn: taxa_juros_mensal
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column valor_proposta
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: e9a358da-b227-4b66-8baf-98fba346f4a8
+		summarizeBy: sum
+		sourceColumn: valor_proposta
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column valor_financiamento
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 24003d36-7427-4318-8cae-bc54dc8ba4cd
+		summarizeBy: sum
+		sourceColumn: valor_financiamento
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column valor_entrada
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 380a33f3-b428-4af0-adbb-60fb8c25a6bc
+		summarizeBy: sum
+		sourceColumn: valor_entrada
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column valor_prestacao
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 1c9937ad-2d49-4d47-a0b9-3ea3664e3bfa
+		summarizeBy: sum
+		sourceColumn: valor_prestacao
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column quantidade_parcelas
+		dataType: int64
+		formatString: 0
+		lineageTag: f90b8ee4-a14a-4385-a050-0e848624beb2
+		summarizeBy: sum
+		sourceColumn: quantidade_parcelas
+
+		annotation SummarizationSetBy = Automatic
+
+	column carencia
+		dataType: int64
+		formatString: 0
+		lineageTag: 1612ec6d-7065-4e54-bd47-2b271e7cf3bc
+		summarizeBy: sum
+		sourceColumn: carencia
+
+		annotation SummarizationSetBy = Automatic
+
+	column status_proposta
+		dataType: string
+		lineageTag: c7f6c1d5-eef1-4661-88bb-9eac48ca26e8
+		summarizeBy: none
+		sourceColumn: status_proposta
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fat_propostas_credito = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\propostas_credito.csv"),[Delimiter=",", Columns=12, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Texto Extraído Antes do Delimitador" = Table.TransformColumns(#"Cabeçalhos Promovidos", {{"data_entrada_proposta", each Text.BeforeDelimiter(_, " "), type text}}),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Texto Extraído Antes do Delimitador",{{"data_entrada_proposta", type date}}),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Tipo Alterado",".",",",Replacer.ReplaceText,{"taxa_juros_mensal"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Valor Substituído",{{"taxa_juros_mensal", Percentage.Type}}),
+				    #"Valor Substituído1" = Table.ReplaceValue(#"Tipo Alterado1",".",",",Replacer.ReplaceText,{"valor_proposta"}),
+				    #"Tipo Alterado2" = Table.TransformColumnTypes(#"Valor Substituído1",{{"valor_proposta", Currency.Type}}),
+				    #"Valor Substituído2" = Table.ReplaceValue(#"Tipo Alterado2",".",",",Replacer.ReplaceText,{"valor_financiamento"}),
+				    #"Tipo Alterado3" = Table.TransformColumnTypes(#"Valor Substituído2",{{"valor_financiamento", Currency.Type}}),
+				    #"Valor Substituído3" = Table.ReplaceValue(#"Tipo Alterado3",".",",",Replacer.ReplaceText,{"valor_entrada"}),
+				    #"Tipo Alterado4" = Table.TransformColumnTypes(#"Valor Substituído3",{{"valor_entrada", Currency.Type}}),
+				    #"Valor Substituído4" = Table.ReplaceValue(#"Tipo Alterado4",".",",",Replacer.ReplaceText,{"valor_prestacao"}),
+				    #"Tipo Alterado5" = Table.TransformColumnTypes(#"Valor Substituído4",{{"valor_prestacao", Currency.Type}, {"quantidade_parcelas", Int64.Type}, {"carencia", Int64.Type}}),
+				    #"Valor Substituído5" = Table.ReplaceValue(#"Tipo Alterado5","anÃ¡lise","análise",Replacer.ReplaceText,{"status_proposta"}),
+				    #"Valor Substituído6" = Table.ReplaceValue(#"Valor Substituído5","ValidaÃ§Ã£o","Validação",Replacer.ReplaceText,{"status_proposta"})
+				in
+				    #"Valor Substituído6"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

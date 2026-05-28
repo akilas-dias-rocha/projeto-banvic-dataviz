@@ -1,0 +1,74 @@
+table fat_transacoes
+	lineageTag: 97012c1c-08b7-4da2-abc0-edf23752cb37
+
+	column cod_transacao
+		dataType: int64
+		formatString: 0
+		lineageTag: 2a17ef2c-a05c-4f57-8d50-c11d2acbef20
+		summarizeBy: sum
+		sourceColumn: cod_transacao
+
+		annotation SummarizationSetBy = Automatic
+
+	column num_conta
+		dataType: int64
+		formatString: 0
+		lineageTag: cb8ba46d-7381-475d-ad6e-0f5700ac0f86
+		summarizeBy: none
+		sourceColumn: num_conta
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_transacao
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: cf56849e-b2f3-4f3b-96e3-4d6f3ba1a290
+		summarizeBy: none
+		sourceColumn: data_transacao
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column nome_transacao
+		dataType: string
+		lineageTag: e5854460-11ee-44d8-9533-e527040d5bf2
+		summarizeBy: none
+		sourceColumn: nome_transacao
+
+		annotation SummarizationSetBy = Automatic
+
+	column valor_transacao
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: aff7ac0a-1d31-41c5-954b-be452de465ce
+		summarizeBy: sum
+		sourceColumn: valor_transacao
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fat_transacoes = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\transacoes.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"cod_transacao", Int64.Type}, {"num_conta", Int64.Type}, {"data_transacao", type datetime}, {"nome_transacao", type text}, {"valor_transacao", Int64.Type}}),
+				    #"Texto Extraído Antes do Delimitador" = Table.TransformColumns(#"Tipo Alterado", {{"data_transacao", each Text.BeforeDelimiter(Text.From(_, "pt-BR"), " "), type text}}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Texto Extraído Antes do Delimitador",{{"data_transacao", type date}}),
+				    #"Texto Extraído Após o Delimitador" = Table.TransformColumns(#"Tipo Alterado1", {{"valor_transacao", each Text.AfterDelimiter(Text.From(_, "pt-BR"), "-"), type text}}),
+				    #"Tipo Alterado2" = Table.TransformColumnTypes(#"Texto Extraído Após o Delimitador",{{"valor_transacao", Currency.Type}}),
+				    #"Valor Substituído" = Table.ReplaceValue(#"Tipo Alterado2","CrÃ©dito","Crédito",Replacer.ReplaceText,{"nome_transacao"}),
+				    #"Valor Substituído1" = Table.ReplaceValue(#"Valor Substituído","DÃ©bito","Débito",Replacer.ReplaceText,{"nome_transacao"}),
+				    #"Valor Substituído2" = Table.ReplaceValue(#"Valor Substituído1","TransferÃªncia","Transferência",Replacer.ReplaceText,{"nome_transacao"}),
+				    #"Valor Substituído3" = Table.ReplaceValue(#"Valor Substituído2","espÃ©cie","espécie",Replacer.ReplaceText,{"nome_transacao"}),
+				    #"Valor Substituído4" = Table.ReplaceValue(#"Valor Substituído3","DepÃ³sito","Depósito",Replacer.ReplaceText,{"nome_transacao"})
+				in
+				    #"Valor Substituído4"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

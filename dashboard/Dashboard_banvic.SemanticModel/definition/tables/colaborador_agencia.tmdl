@@ -1,0 +1,35 @@
+table colaborador_agencia
+	lineageTag: c0418979-96ec-472d-bec1-30ca80c77ff7
+
+	column cod_colaborador
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a59e4fd-dfec-4a3c-9964-742fa9d5bdf3
+		summarizeBy: none
+		sourceColumn: cod_colaborador
+
+		annotation SummarizationSetBy = Automatic
+
+	column cod_agencia
+		dataType: int64
+		formatString: 0
+		lineageTag: 50d1b374-f0ba-4f71-9151-dd14775e0cdb
+		summarizeBy: sum
+		sourceColumn: cod_agencia
+
+		annotation SummarizationSetBy = Automatic
+
+	partition colaborador_agencia = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\colaborador_agencia.csv"),[Delimiter=",", Columns=2, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"cod_colaborador", Int64.Type}, {"cod_agencia", Int64.Type}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

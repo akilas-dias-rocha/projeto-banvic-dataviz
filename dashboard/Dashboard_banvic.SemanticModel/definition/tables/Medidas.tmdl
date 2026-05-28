@@ -1,0 +1,136 @@
+table Medidas
+	lineageTag: a21a5021-014c-48dd-8261-10f539a45978
+
+	measure 'Qnt. transações' = DISTINCTCOUNT(fat_transacoes[cod_transacao])
+		formatString: 0
+		lineageTag: bec32406-7614-40aa-aa85-da014a92d384
+
+	measure 'Valor Total Movimentado' = SUM(fat_transacoes[valor_transacao])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 316e4fbf-9194-4218-a118-d795e40415f4
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Valor Médio Movimentado' = AVERAGE(fat_transacoes[valor_transacao])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 122d4a99-049d-4785-b640-658e90295d9a
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Carência Média' = AVERAGE(fat_propostas_credito[carencia])
+		lineageTag: 648fa996-d695-4ac7-9360-af52c5a67391
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Valor Total Financeado' = SUM(fat_propostas_credito[valor_financiamento])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 5c0c575f-bc04-4467-a61e-863ecac8de04
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Valor Médio Proposto' = AVERAGE(fat_propostas_credito[valor_proposta])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 96fbd2bd-9947-4226-a5c1-4fe7bd2a190d
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Total Financiamento Proposto' = SUM(fat_propostas_credito[valor_proposta])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: d4bbb6b3-07e7-48b9-85c4-cd15a8068a69
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Total Financiamento Aprovado' =
+			CALCULATE(
+			    SUM(fat_propostas_credito[valor_financiamento]),
+			    FILTER(fat_propostas_credito, fat_propostas_credito[status_proposta] = "Aprovada")
+			)
+		formatString: "R$"\ #,0.0;-"R$"\ #,0.0;"R$"\ #,0.0
+		lineageTag: 93975c2d-5970-44fd-bbf0-52913a12f489
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Qnt. Financeamento Aprovado' =
+			CALCULATE(
+			    COUNT(fat_propostas_credito[cod_proposta]),
+			    FILTER(fat_propostas_credito, fat_propostas_credito[status_proposta] = "Aprovada")
+			)
+		formatString: 0
+		lineageTag: 15649f29-ab71-4048-bdd2-3a294a2206cc
+
+	measure 'Taxa de Aprovação' = [Qnt. Financeamento Aprovado]/ [Qnt. Propostas]
+		formatString: 0.000%;-0.000%;0.000%
+		lineageTag: 7bf91a30-130e-4438-8908-a1f6100b0540
+
+	measure 'Qnt. Propostas' = COUNT(fat_propostas_credito[cod_proposta])
+		formatString: 0
+		lineageTag: 130077b1-19c9-4c69-993a-27ced7e9de4e
+
+	measure 'Qnt. Transações Mês Anterior' =
+			CALCULATE(
+			    COUNT(fat_transacoes[cod_transacao]),
+			    DATEADD(dCalendario[Date],-1,MONTH)
+			    )
+		formatString: 0
+		lineageTag: b64b61ad-3fbf-475f-a9d4-d046ce7c049b
+
+	measure 'MoM Qnt. Transações' = IF([Qnt. Transações Mês Anterior] = BLANK(),BLANK(),DIVIDE([Qnt. Transações Mês Anterior],[Qnt. transações])-1)
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		lineageTag: afca223a-2496-4828-8a8a-4492f3632d28
+
+	measure 'Valor Médio Financeamento Aprovado' =
+			CALCULATE(
+			    AVERAGE(fat_propostas_credito[valor_financiamento]),
+			    FILTER(fat_propostas_credito, fat_propostas_credito[status_proposta] = "Aprovada")
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: df6b69ce-5551-47d2-8fea-82d04958cf60
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Qnt. Financeamentos Aprovados Mês Anterior' =
+			CALCULATE(
+			    COUNT(fat_propostas_credito[cod_proposta]),
+			    DATEADD(dCalendario[Date],-1,MONTH)
+			    )
+		formatString: 0
+		lineageTag: a8b46d90-edd2-42c3-9191-051a301df3e8
+
+	measure 'MoM Qnt. Financeamentos Aprovados' = IF([Qnt. Financeamento Aprovado] = BLANK(),BLANK(),DIVIDE([Qnt. Financeamentos Aprovados Mês Anterior],[Qnt. transações])-1)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 87209881-aeb0-4874-8c9a-5bb196e337cc
+
+	measure '% Participação em Financiamentos Aprovados' = ```
+			
+			DIVIDE (
+			    [Total Financiamento Aprovado],
+			    CALCULATE ([Total Financiamento Aprovado], ALL(dim_agencias[Agência]))
+			)
+			
+			```
+		formatString: #,0.0%;-#,0.0%;#,0.0%
+		lineageTag: 07818799-6cb4-4f44-8112-6314f4012e24
+
+	measure 'Média Transações' =
+			[Qnt. transações]/COUNT(dCalendario[Mês]
+			)
+		formatString: 0
+		lineageTag: 0cacac1e-5c20-42ec-9b07-684836d59f4a
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column Value
+		formatString: 0
+		lineageTag: 8713cbad-1270-4da3-93dc-07b1c33f5a94
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = calculated
+		mode: import
+		source = {1}
+
+	annotation PBI_Id = 3e6d1476d81b4bfdb3ebbc2a61e4ed79
+

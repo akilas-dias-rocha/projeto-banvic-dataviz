@@ -1,0 +1,117 @@
+table dim_clientes
+	lineageTag: 839cdeca-d1c7-4b49-9bee-b3f4622f6c16
+
+	column cod_cliente
+		dataType: string
+		lineageTag: 8967aebf-c399-4890-be6e-9e23d3a64d9a
+		summarizeBy: none
+		sourceColumn: cod_cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column primeiro_nome
+		dataType: string
+		lineageTag: 20f31c02-02aa-45f1-a605-384726af66a2
+		summarizeBy: none
+		sourceColumn: primeiro_nome
+
+		annotation SummarizationSetBy = Automatic
+
+	column ultimo_nome
+		dataType: string
+		lineageTag: d252febf-cac3-4d37-9034-29c9be533c2d
+		summarizeBy: none
+		sourceColumn: ultimo_nome
+
+		annotation SummarizationSetBy = Automatic
+
+	column email
+		dataType: string
+		lineageTag: 3b8b117d-314e-454a-b6bb-add46d88ab3d
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = Automatic
+
+	column tipo_cliente
+		dataType: string
+		lineageTag: 2c2fec1a-048e-49a3-ac92-22168a9ee2c9
+		summarizeBy: none
+		sourceColumn: tipo_cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_inclusao
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e832a89a-8254-452c-9228-d91cd12cb509
+		summarizeBy: none
+		sourceColumn: data_inclusao
+
+		variation Variation
+			isDefault
+			relationship: 4a218890-6ac8-4c50-b7cf-b07f7b281589
+			defaultHierarchy: LocalDateTable_78f9ac33-fa63-4240-850c-31cee55d4117.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column cpfcnpj
+		dataType: string
+		lineageTag: f92cf564-d83a-4f03-bb3f-849c9b16f82a
+		summarizeBy: none
+		sourceColumn: cpfcnpj
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_nascimento
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 84411a18-a034-4d03-95b2-638f405eeccf
+		summarizeBy: none
+		sourceColumn: data_nascimento
+
+		variation Variation
+			isDefault
+			relationship: 5b19a244-0508-409a-813e-55dc459b1a59
+			defaultHierarchy: LocalDateTable_cdb87783-4e4e-4beb-ad19-7242dd17be28.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column endereco
+		dataType: string
+		lineageTag: 2b24c842-6269-4a27-9e8a-ef6541a6c1ca
+		summarizeBy: none
+		sourceColumn: endereco
+
+		annotation SummarizationSetBy = Automatic
+
+	column cep
+		dataType: string
+		lineageTag: 66cefee4-87e5-4b72-84c6-9b0baa47bcec
+		summarizeBy: none
+		sourceColumn: cep
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_clientes = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\clientes.csv"),[Delimiter=",", Columns=10, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"data_nascimento", type date}}),
+				    #"Texto Extraído Antes do Delimitador" = Table.TransformColumns(#"Tipo Alterado", {{"data_inclusao", each Text.BeforeDelimiter(_, " "), type text}}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Texto Extraído Antes do Delimitador",{{"data_inclusao", type date}})
+				in
+				    #"Tipo Alterado1"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,85 @@
+table dim_agencias
+	lineageTag: 5fb81fb6-cf12-449b-81fe-228a8774b288
+
+	column cod_gência
+		dataType: int64
+		formatString: 0
+		lineageTag: 30ed75ea-8c50-4480-a978-820600d6a3c2
+		summarizeBy: none
+		sourceColumn: cod_gência
+
+		annotation SummarizationSetBy = Automatic
+
+	column Agência
+		dataType: string
+		lineageTag: 386bedf8-7220-4cd3-b923-979e97ce4b89
+		summarizeBy: none
+		sourceColumn: Agência
+
+		annotation SummarizationSetBy = Automatic
+
+	column endereco
+		dataType: string
+		lineageTag: 0feda28b-f701-44ae-bcf8-ab3deebbe08e
+		summarizeBy: none
+		sourceColumn: endereco
+
+		annotation SummarizationSetBy = Automatic
+
+	column cidade
+		dataType: string
+		lineageTag: 46f94bd2-4c50-4f94-82ff-0ea886a64741
+		summarizeBy: none
+		sourceColumn: cidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column uf
+		dataType: string
+		lineageTag: f653bfa4-13be-4aa3-93c5-52886af9b005
+		summarizeBy: none
+		sourceColumn: uf
+
+		annotation SummarizationSetBy = Automatic
+
+	column data_abertura
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 30e3b080-151e-4742-8da4-c8fc49760439
+		summarizeBy: none
+		sourceColumn: data_abertura
+
+		variation Variation
+			isDefault
+			relationship: 1ab05018-3578-4ac1-81c0-17a14e16d857
+			defaultHierarchy: LocalDateTable_900e26e8-ad71-4523-b20a-e0c3121aa593.'Hierarquia de datas'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column tipo_agencia
+		dataType: string
+		lineageTag: 19992307-cc13-452c-8bf5-3379d768e549
+		summarizeBy: none
+		sourceColumn: tipo_agencia
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_agencias = m
+		mode: import
+		source =
+				let
+				    Fonte = Csv.Document(File.Contents("E:\Documentos\Desafio Lighthouse\banvic_limpo\agencias.csv"),[Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Fonte, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"cod_agencia", Int64.Type}, {"nome", type text}, {"endereco", type text}, {"cidade", type text}, {"uf", type text}, {"data_abertura", type date}, {"tipo_agencia", type text}}),
+				    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"cod_agencia", "cod_gência"}, {"nome", "Agência"}})
+				in
+				    #"Colunas Renomeadas"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+
