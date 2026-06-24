@@ -10,7 +10,7 @@ Análise exploratória de dados (EDA) e desenvolvimento de dashboard para visual
 
 ---
 
-## 📋 Descrição
+## Descrição
 
 Este projeto consiste em duas etapas principais:
 
@@ -20,7 +20,7 @@ Este projeto consiste em duas etapas principais:
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 projeto-banvic-dataviz/
@@ -44,7 +44,7 @@ projeto-banvic-dataviz/
 
 ---
 
-## 📊 Dados
+## Dados
 
 O dataset é composto por 7 tabelas com dados do banco fictício Banvic:
 
@@ -83,7 +83,7 @@ Ao final, o notebook exporta todas as tabelas tratadas para a pasta `banvic_limp
 
 ---
 
-## 📈 Dashboard Power BI
+## Dashboard Power BI
 
 O dashboard foi desenvolvido no **Power BI Desktop** utilizando o formato de projeto `.pbip` (Power BI Project), com modelo semântico versionado separadamente.
 
@@ -136,7 +136,7 @@ O dashboard possui **2 páginas** com visuais incluindo:
 
 ---
 
-## 🚀 Como Rodar
+## Como Rodar
 
 ### Pré-requisitos
 - Python 3.11+
@@ -179,7 +179,7 @@ Abra o arquivo `dashboard/Dashboard_banvic.pbip` no **Power BI Desktop**.
 
 ---
 
-## 📦 Dependências
+## Dependências
 
 | Biblioteca | Versão | Uso |
 |-----------|--------|-----|
@@ -189,7 +189,7 @@ Abra o arquivo `dashboard/Dashboard_banvic.pbip` no **Power BI Desktop**.
 
 ---
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **Python** — Linguagem principal para análise de dados
 - **Pandas** — Manipulação e transformação de DataFrames
@@ -197,8 +197,4 @@ Abra o arquivo `dashboard/Dashboard_banvic.pbip` no **Power BI Desktop**.
 - **Power BI Desktop** — Desenvolvimento do dashboard interativo
 - **Power BI Semantic Model** — Modelo de dados com schema estrela e medidas DAX
 
----
 
-## 📝 Licença
-
-Este projeto é um estudo de caso e não possui licença para uso comercial.
